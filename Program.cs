@@ -10,70 +10,69 @@ namespace MooGame
         public static void Main(string[] args)
         {
 
-            bool playOn = true;
-            Console.WriteLine("Enter your user name:\n");
-            string name = Console.ReadLine();
+            bool gameIsOn = true;
+            Console.WriteLine("Enter your user playerName:\n");
+            string playerName = Console.ReadLine();
 
-            while (playOn)
+            while (gameIsOn)
             {
-                string goal = makeGoal();
-
+                string gameGoal = GenerateRandomFourDigitNumber();
 
                 Console.WriteLine("New game:\n");
                 //comment out or remove next line to play real games!
-                Console.WriteLine("For practice, number is: " + goal + "\n");
-                string guess = Console.ReadLine();
+                //Console.WriteLine("For practice, number is: " + gameGoal + "\n");
+                string playersGuess = Console.ReadLine();
 
-                int nGuess = 1;
-                string bbcc = checkBC(goal, guess);
-                Console.WriteLine(bbcc + "\n");
-                while (bbcc != "BBBB,")
+                int numberOfGuesses = 1;
+                string guessOutcome = GetBullsAndCows(gameGoal, playersGuess);
+                Console.WriteLine(guessOutcome + "\n");
+                while (guessOutcome != "BBBB,")
                 {
-                    nGuess++;
-                    guess = Console.ReadLine();
-                    Console.WriteLine(guess + "\n");
-                    bbcc = checkBC(goal, guess);
-                    Console.WriteLine(bbcc + "\n");
+                    numberOfGuesses++;
+                    playersGuess = Console.ReadLine();
+                    Console.WriteLine(playersGuess + "\n");
+                    guessOutcome = GetBullsAndCows(gameGoal, playersGuess);
+                    Console.WriteLine(guessOutcome + "\n");
                 }
                 StreamWriter output = new StreamWriter("result.txt", append: true);
-                output.WriteLine(name + "#&#" + nGuess);
+                output.WriteLine(playerName + "#&#" + numberOfGuesses);
                 output.Close();
                 showTopList();
-                Console.WriteLine("Correct, it took " + nGuess + " guesses\nContinue?");
+                Console.WriteLine("Correct, it took " + numberOfGuesses + " guesses\nContinue?");
                 string answer = Console.ReadLine();
                 if (answer != null && answer != "" && answer.Substring(0, 1) == "n")
                 {
-                    playOn = false;
+                    gameIsOn = false;
                 }
             }
         }
-        static string makeGoal()
+        static string GenerateRandomFourDigitNumber()
         {
-            Random randomGenerator = new Random();
-            string goal = "";
+            Random numberGenerator = new Random();
+            string gameGoal = String.Empty;
             for (int i = 0; i < 4; i++)
             {
-                int random = randomGenerator.Next(10);
-                string randomDigit = "" + random;
-                while (goal.Contains(randomDigit))
+                int randomDigit = numberGenerator.Next(10);
+                string number = randomDigit.ToString(); //duplicated code, should i fix it if it only uses twice?
+                while (gameGoal.Contains(number))
                 {
-                    random = randomGenerator.Next(10);
-                    randomDigit = "" + random;
+                    randomDigit = numberGenerator.Next(10);
+                    number = randomDigit.ToString();
                 }
-                goal = goal + randomDigit;
+                gameGoal += number;
             }
-            return goal;
+            return gameGoal;
         }
 
-        static string checkBC(string goal, string guess)
+        static string GetBullsAndCows(string gameGoal, string playersGuess)
         {
             int cows = 0, bulls = 0;
-            guess += "    ";     // if player entered less than 4 chars
-            for (int i = 0; i < 4; i++)
+            playersGuess += "    ";     // if player entered less than 4 chars,felhantering ska vara bättre
+            for (int i = 0; i < 4; i++)//too much iteration
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    if (goal[i] == guess[j])
+                    if (gameGoal[i] == playersGuess[j])
                     {
                         if (i == j)
                         {
