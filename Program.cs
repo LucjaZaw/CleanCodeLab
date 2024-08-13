@@ -52,14 +52,12 @@ namespace MooGame
             string gameGoal = String.Empty;
             for (int i = 0; i < 4; i++)
             {
-                int randomDigit = numberGenerator.Next(10);
-                string number = randomDigit.ToString(); //duplicated code, should i fix it if it only uses twice?
-                while (gameGoal.Contains(number))
+                string randomDigit = numberGenerator.Next(10).ToString(); 
+                while (gameGoal.Contains(randomDigit))
                 {
-                    randomDigit = numberGenerator.Next(10);
-                    number = randomDigit.ToString();
+                    randomDigit = numberGenerator.Next(10).ToString();
                 }
-                gameGoal += number;
+                gameGoal += randomDigit;
             }
             return gameGoal;
         }
@@ -74,7 +72,7 @@ namespace MooGame
                 {
                     if (gameGoal[i] == playersGuess[j])
                     {
-                        if (i == j)
+                        if (i == j) 
                         {
                             bulls++;
                         }
