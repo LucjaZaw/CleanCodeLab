@@ -110,11 +110,11 @@ namespace MooGame
 
 
             }
-            results.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
+            results.Sort((p1, p2) => p1.CalculateAverageGuessesPerGame().CompareTo(p2.CalculateAverageGuessesPerGame()));
             Console.WriteLine("Player   games average");
             foreach (PlayerData p in results)
             {
-                Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.Name, p.NGames, p.Average()));
+                Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.PlayerName, p.NumberOfGamesPlayed, p.CalculateAverageGuessesPerGame()));
             }
             input.Close();
         }
