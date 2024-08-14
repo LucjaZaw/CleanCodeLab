@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using CleanCodeLab.Interfaces;
+using CleanCodeLab.Classes;
 
 namespace MooGame
 {
@@ -10,7 +12,13 @@ namespace MooGame
         public static void Main(string[] args)
         {
 
-            bool gameIsOn = true;
+            IUI ui = new ConsoleIO();
+            MooGameLogic gameLogic = new MooGameLogic();
+            Statistics statistics = new Statistics();   
+            MooGameController gameController = new MooGameController(gameLogic, ui, statistics);
+            gameController.Run();
+
+            /*bool gameIsOn = true;
             Console.WriteLine("Enter your user playerName:\n");
             string playerName = Console.ReadLine();
 
@@ -18,7 +26,7 @@ namespace MooGame
             {
                 string gameGoal = GenerateRandomFourDigitNumber();
 
-                Console.WriteLine("New game:\n");
+                Console.WriteLine("New game:\n Guess a 4 digit number");
                 //comment out or remove next line to play real games!
                 //Console.WriteLine("For practice, number is: " + gameGoal + "\n");
                 string playersGuess = Console.ReadLine();
@@ -45,8 +53,8 @@ namespace MooGame
                     gameIsOn = false;
                 }
             }
-        }
-        static string GenerateRandomFourDigitNumber()
+        }*/
+        /*static string GenerateRandomFourDigitNumber()
         {
             Random numberGenerator = new Random();
             string gameGoal = String.Empty;
@@ -60,9 +68,8 @@ namespace MooGame
                 gameGoal += randomDigit;
             }
             return gameGoal;
-        }
-
-        static string GetBullsAndCows(string gameGoal, string playersGuess)
+        }*/
+        /*static string GetBullsAndCows(string gameGoal, string playersGuess)
         {
             int cows = 0, bulls = 0;
             playersGuess += "    ";     // if player entered less than 4 chars,felhantering ska vara bättre
@@ -83,11 +90,9 @@ namespace MooGame
                     }
                 }
             }
-            return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
+            return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);*/
         }
-
-
-        static void showTopList()
+        /*static void showTopList()
         {
             StreamReader input = new StreamReader("result.txt");
             List<PlayerData> results = new List<PlayerData>();
@@ -110,39 +115,39 @@ namespace MooGame
 
 
             }
-            results.Sort((p1, p2) => p1.CalculateAverageGuessesPerGame().CompareTo(p2.CalculateAverageGuessesPerGame()));
+            results.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
             Console.WriteLine("Player   games average");
             foreach (PlayerData p in results)
             {
-                Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.PlayerName, p.NumberOfGamesPlayed, p.CalculateAverageGuessesPerGame()));
+                Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.Name, p.NumberOfGamesPlayed, p.Average()));
             }
             input.Close();
-        }
+        }*/
     }
 
-    class PlayerData
+    /*class PlayerData
     {
         public string Name { get; private set; }
-        public int NGames { get; private set; }
+        public int NumberOfGamesPlayed { get; private set; }
         int totalGuess;
 
 
         public PlayerData(string name, int guesses)
         {
             this.Name = name;
-            NGames = 1;
+            NumberOfGamesPlayed = 1;
             totalGuess = guesses;
         }
 
         public void Update(int guesses)
         {
             totalGuess += guesses;
-            NGames++;
+            NumberOfGamesPlayed++;
         }
 
         public double Average()
         {
-            return (double)totalGuess / NGames;
+            return (double)totalGuess / NumberOfGamesPlayed;
         }
 
 
@@ -156,5 +161,5 @@ namespace MooGame
         {
             return Name.GetHashCode();
         }
-    }
+    }*/
 }

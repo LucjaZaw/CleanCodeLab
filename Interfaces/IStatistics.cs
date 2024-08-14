@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanCodeLab.Interfaces
+namespace CleanCodeLab.Interfaces;
+
+public interface IStatistics
 {
-    internal class IStatistics
-    {
-    }
+    public void ShoeTopList();
 }

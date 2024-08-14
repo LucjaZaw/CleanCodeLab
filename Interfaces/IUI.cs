@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace CleanCodeLab.Interfaces
 {
-    internal class IUI
+    public interface IUI
     {
+        void EnterPlayerName();
+        string GetPlayerName();
+        void EnterPlayerGuess();
+        string GetPlayerGuess();
+        void GetExitMessage(string numberOfGuesses);
+        string GetExitGameResponce();
+        void ShowTopList();
     }
 }
