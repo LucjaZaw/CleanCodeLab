@@ -1,6 +1,7 @@
 ﻿using CleanCodeLab.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,33 +10,17 @@ namespace CleanCodeLab.Classes
 {
     public class ConsoleIO : IUI
     {
-        public void EnterPlayerName()
+        public ConsoleIO()
         {
-            Console.WriteLine("Enter your user playerName:\n");
+            Debug.WriteLine("Created instance of IO");
         }
-        public string GetPlayerName()
+        public void DisplayOutput(string message)
         {
-            return Console.ReadLine();
+            Console.WriteLine(message);
         }
-        public void EnterPlayerGuess() 
-        { 
-            Console.WriteLine("New game:\n Guess a 4 digit number");
-        }
-        public string GetPlayerGuess()
+        public string GetUserInput()
         {
-            return Console.ReadLine();
-        }
-        public void GetExitMessage(string numberOfGuesses)
-        {
-            Console.WriteLine("Correct, it took " + numberOfGuesses + " guesses\nContinue?");
-        }
-        public string GetExitGameResponce()
-        {
-            return Console.ReadLine();
-        }
-        public void ShowTopList()
-        {
-            throw new NotImplementedException();
+           return Console.ReadLine();
         }
     }
 }

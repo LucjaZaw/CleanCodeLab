@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CleanCodeLab.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,36 +7,55 @@ using System.Threading.Tasks;
 
 namespace CleanCodeLab.Classes;
 
-public class Statistics
-{
-    
-    public void ShowTopList()
+public class Statistics : IStatistics
+
+{ 
+    public void AddPlayerData(string playerName, int numberOfGuesses)
     {
-        StreamReader input = new StreamReader("result.txt");
-        List<PlayerData> results = new List<PlayerData>();
-        string line;
-        while ((line = input.ReadLine()) != null)
+        StreamWriter output = new StreamWriter("result.txt", append: true);
+        output.WriteLine(playerName + "#&#" + numberOfGuesses);
+        output.Close();
+    }
+    
+    public List<PlayerData> GetPlayerData()
+    {
+        StreamReader fileReader = new StreamReader("result.txt");
+        List<PlayerData> playerDataList = new List<PlayerData>();
+        string currentLine;
+        
+        while ((currentLine = fileReader.ReadLine()) != null)
         {
-            string[] nameAndScore = line.Split(new string[] { "#&#" }, StringSplitOptions.None);
-            string name = nameAndScore[0];
-            int guesses = Convert.ToInt32(nameAndScore[1]);
-            PlayerData pd = new PlayerData(name, guesses);
-            int pos = results.IndexOf(pd);
-            if (pos < 0)
+            string[] nameAndScoreParts = currentLine.Split(new string[] { "#&#" }, StringSplitOptions.None);
+            string playerName = nameAndScoreParts[0];
+            int numberOfGuesses = Convert.ToInt32(nameAndScoreParts[1]);
+            PlayerData currentPlayerData = new PlayerData(playerName, numberOfGuesses);
+         
+            int existingPlayerIndex = playerDataList.IndexOf(currentPlayerData);
+            if (existingPlayerIndex < 0)
             {
-                results.Add(pd);
+                playerDataList.Add(currentPlayerData);
             }
             else
             {
-                results[pos].IncrementTotalNumberOfGuesses(guesses);
+              
+                playerDataList[existingPlayerIndex].IncrementTotalNumberOfGuesses(numberOfGuesses);
+                playerDataList[existingPlayerIndex].IncrementNumberOfGamesPlayed();
             }
         }
-        results.Sort((p1, p2) => p1.CalculateAverageGuessesPerGame().CompareTo(p2.CalculateAverageGuessesPerGame()));
-        Console.WriteLine("Player   games average");
-        foreach (PlayerData p in results)
+       
+        playerDataList.Sort((player1, player2) => 
+            player1.CalculateAverageGuessesPerGame().CompareTo(player2.CalculateAverageGuessesPerGame()));
+        fileReader.Close();
+        return playerDataList;
+    }
+    public string CreateTopList(List<PlayerData> playerData) 
+    { 
+        StringBuilder myStringBuilder = new StringBuilder();
+        myStringBuilder.AppendLine("Player   games average");
+        foreach (PlayerData player in playerData)
         {
-            Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.PlayerName, p.NumberOfGamesPlayed, p.CalculateAverageGuessesPerGame()));
+            myStringBuilder.AppendLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.PlayerName, player.NumberOfGamesPlayed, player.CalculateAverageGuessesPerGame()));
         }
-        input.Close();
+        return myStringBuilder.ToString();
     }
 }

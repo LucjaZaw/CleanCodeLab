@@ -7,90 +7,91 @@ using CleanCodeLab.Classes;
 namespace MooGame
 {
     class MainClass
-    {
-
+    {   
         public static void Main(string[] args)
         {
-
             IUI ui = new ConsoleIO();
-            MooGameLogic gameLogic = new MooGameLogic();
-            Statistics statistics = new Statistics();   
-            MooGameController gameController = new MooGameController(gameLogic, ui, statistics);
+            ICustomRandom customRandom = new MyRandomWrapper(); 
+            IStatistics statistics = new Statistics();
+            IGuessingGame gameLogic = new MooGameLogic(ui, customRandom);
+            ProgramController gameController = new(gameLogic, ui, statistics);
             gameController.Run();
-
-            /*bool gameIsOn = true;
+            #region This is the old code
+            /*bool GameIsOn = true;
             Console.WriteLine("Enter your user playerName:\n");
             string playerName = Console.ReadLine();
 
-            while (gameIsOn)
+            while (GameIsOn)
             {
-                string gameGoal = GenerateRandomFourDigitNumber();
+                string gameGoal = GetGameGoal();
 
                 Console.WriteLine("New game:\n Guess a 4 digit number");
                 //comment out or remove next line to play real games!
                 //Console.WriteLine("For practice, number is: " + gameGoal + "\n");
                 string playersGuess = Console.ReadLine();
 
-                int numberOfGuesses = 1;
-                string guessOutcome = GetBullsAndCows(gameGoal, playersGuess);
+                int PlayersNumberOfGuesses = 1;
+                string guessOutcome = CalculateBullsAndCowsScore(gameGoal, playersGuess);
                 Console.WriteLine(guessOutcome + "\n");
                 while (guessOutcome != "BBBB,")
                 {
-                    numberOfGuesses++;
+                    PlayersNumberOfGuesses++;
                     playersGuess = Console.ReadLine();
                     Console.WriteLine(playersGuess + "\n");
-                    guessOutcome = GetBullsAndCows(gameGoal, playersGuess);
+                    guessOutcome = CalculateBullsAndCowsScore(gameGoal, playersGuess);
                     Console.WriteLine(guessOutcome + "\n");
                 }
                 StreamWriter output = new StreamWriter("result.txt", append: true);
-                output.WriteLine(playerName + "#&#" + numberOfGuesses);
+                output.WriteLine(playerName + "#&#" + PlayersNumberOfGuesses);
                 output.Close();
                 showTopList();
-                Console.WriteLine("Correct, it took " + numberOfGuesses + " guesses\nContinue?");
+                Console.WriteLine("Correct, it took " + PlayersNumberOfGuesses + " guesses\nContinue?");
                 string answer = Console.ReadLine();
                 if (answer != null && answer != "" && answer.Substring(0, 1) == "n")
                 {
-                    gameIsOn = false;
+                    GameIsOn = false;
                 }
             }
         }*/
-        /*static string GenerateRandomFourDigitNumber()
-        {
-            Random numberGenerator = new Random();
-            string gameGoal = String.Empty;
-            for (int i = 0; i < 4; i++)
+            /*static string GetGameGoal()
             {
-                string randomDigit = numberGenerator.Next(10).ToString(); 
-                while (gameGoal.Contains(randomDigit))
+                Random numberGenerator = new Random();
+                string gameGoal = String.Empty;
+                for (int i = 0; i < 4; i++)
                 {
-                    randomDigit = numberGenerator.Next(10).ToString();
-                }
-                gameGoal += randomDigit;
-            }
-            return gameGoal;
-        }*/
-        /*static string GetBullsAndCows(string gameGoal, string playersGuess)
-        {
-            int cows = 0, bulls = 0;
-            playersGuess += "    ";     // if player entered less than 4 chars,felhantering ska vara bättre
-            for (int i = 0; i < 4; i++)//too much iteration
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    if (gameGoal[i] == playersGuess[j])
+                    string randomDigit = numberGenerator.Next(10).ToString(); 
+                    while (gameGoal.Contains(randomDigit))
                     {
-                        if (i == j) 
+                        randomDigit = numberGenerator.Next(10).ToString();
+                    }
+                    gameGoal += randomDigit;
+                }
+                return gameGoal;
+            }*/
+            /*static string CalculateBullsAndCowsScore(string gameGoal, string playersGuess)
+            {
+                int cows = 0, bulls = 0;
+                playersGuess += "    ";     // if player entered less than 4 chars,felhantering ska vara bättre
+                for (int i = 0; i < 4; i++)//too much iteration
+                {
+                    //goal 1598
+                    //guess 4568
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (gameGoal[i] == playersGuess[j])
                         {
-                            bulls++;
-                        }
-                        else
-                        {
-                            cows++;
+                            if (i == j) 
+                            {
+                                bulls++;
+                            }
+                            else
+                            {
+                                cows++;
+                            }
                         }
                     }
                 }
-            }
-            return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);*/
+                return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);*/
         }
         /*static void showTopList()
         {
@@ -119,22 +120,22 @@ namespace MooGame
             Console.WriteLine("Player   games average");
             foreach (PlayerData p in results)
             {
-                Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.Name, p.NumberOfGamesPlayed, p.Average()));
+                Console.WriteLine(string.Format("{0,-9}{1,5:D}{2,9:F2}", p.GameName, p.NumberOfGamesPlayed, p.Average()));
             }
-            input.Close();
-        }*/
+            input.Close();*/
     }
+}
 
     /*class PlayerData
     {
-        public string Name { get; private set; }
+        public string GameName { get; private set; }
         public int NumberOfGamesPlayed { get; private set; }
         int totalGuess;
 
 
         public PlayerData(string name, int guesses)
         {
-            this.Name = name;
+            this.GameName = name;
             NumberOfGamesPlayed = 1;
             totalGuess = guesses;
         }
@@ -153,13 +154,13 @@ namespace MooGame
 
         public override bool Equals(Object p)
         {
-            return Name.Equals(((PlayerData)p).Name);
+            return GameName.Equals(((PlayerData)p).GameName);
         }
 
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return GameName.GetHashCode();
         }
     }*/
-}
+    #endregion

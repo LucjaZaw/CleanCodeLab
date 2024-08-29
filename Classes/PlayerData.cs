@@ -11,19 +11,19 @@ public class PlayerData
 
     public string PlayerName { get; private set; }
     public int NumberOfGamesPlayed { get; private set; }
-    int totalNumberOfGuesses;
+    int TotalNumberOfGuesses;
 
 
     public PlayerData(string name, int guesses)
     {
         this.PlayerName = name;
         NumberOfGamesPlayed = 1;
-        totalNumberOfGuesses = guesses;
+        TotalNumberOfGuesses = guesses;
     }
 
-    public void IncrementTotalNumberOfGuesses(int guesses) => totalNumberOfGuesses += guesses;
+    public void IncrementTotalNumberOfGuesses(int guesses) => TotalNumberOfGuesses += guesses;
     public void IncrementNumberOfGamesPlayed() => NumberOfGamesPlayed++;
-    public double CalculateAverageGuessesPerGame() => (double)totalNumberOfGuesses / NumberOfGamesPlayed;
+    public double CalculateAverageGuessesPerGame() => (double)TotalNumberOfGuesses / NumberOfGamesPlayed;
     public override bool Equals(Object player) => PlayerName.Equals(((PlayerData)player).PlayerName);
     public override int GetHashCode() => PlayerName.GetHashCode();
 }
